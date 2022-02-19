@@ -1,11 +1,5 @@
 # --- root/variables.tf ---
 
-variable "mypublicip" { # to allow ssh to bastion host from my public ip
-  type        = string
-  description = "my public ip "
-  default     = "69.160.29.0/24"
-}
-
 variable "all_ip" {
   type        = string
   description = "all ip addresses"
@@ -94,5 +88,5 @@ variable "listener_protocol" {
 
 variable "adminip" { # public ip to allow access to /admin url 
   type    = string
-  default = "116.206.137.0/24"
+  default = "116.206.137.18/32"
 }
