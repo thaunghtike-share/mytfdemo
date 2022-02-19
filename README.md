@@ -232,7 +232,7 @@ variable "mypublicip" {    # to allow ssh to bastion host from my public ip
 
 variable "adminip" {   # public ip to allow access to /admin url 
   type = string
-  default = "116.206.137.0/24"
+  default = "116.206.137.18/32"
 }
 ```
 
