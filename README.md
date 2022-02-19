@@ -227,7 +227,7 @@ these two variables: mypublicip is used to allow ssh to bastion host in bastionS
 variable "mypublicip" {    # to allow ssh to bastion host from my public ip
   type        = string
   description = "my public ip "
-  default     = "210.14.105.0/24"
+  default     = "69.160.29.0/24"
 }
 
 variable "adminip" {   # public ip to allow access to /admin url 
