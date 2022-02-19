@@ -12,7 +12,7 @@ locals {
           from        = 22
           to          = 22
           protocol    = "tcp"
-          cidr_blocks = [var.mypublicip]   # change your ip here
+          cidr_blocks = [var.all_ip]   
         }
       }
     }
