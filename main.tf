@@ -3,20 +3,21 @@
 # --- create a vpc  ---
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
   version = "3.12.0"
 
   name = "my-vpc"
   cidr = var.cidr_blocks
 
-  azs             = var.azs             
-  private_subnets = var.private_subnets 
-  public_subnets  = var.public_subnets  
+  azs             = var.azs
+  private_subnets = var.private_subnets
+  public_subnets  = var.public_subnets
 
-  enable_nat_gateway = true  
+  enable_nat_gateway = true
 
   tags = {
     Terraform   = "true"
+    Environment = "dev"
   }
 }
 
@@ -70,6 +71,12 @@ resource "aws_security_group_rule" "privatesg-albrule" {
   source_security_group_id = aws_security_group.awsdemo-sg["albSG"].id
   security_group_id        = aws_security_group.awsdemo-sg["privateSG"].id
 }
+# ---- aws keypair ---------
+
+resource "aws_key_pair" "tfdemo" {
+  key_name   = "tfdemo"
+  public_key = var.public_key
+}
 
 # ---- provisioning bastion ec2 -----
 
@@ -79,7 +86,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = ["${aws_security_group.awsdemo-sg["bastionSG"].id}"]
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
-  key_name                    = var.aws_key_pair
+  key_name                    = aws_key_pair.tfdemo.id
 
   tags = {
     Name = "Bastion-EC2"
@@ -99,23 +106,23 @@ resource "aws_instance" "private" {
   instance_type          = var.instance_type
   vpc_security_group_ids = ["${aws_security_group.awsdemo-sg["privateSG"].id}"]
   subnet_id              = module.vpc.private_subnets[0]
-  key_name               = var.aws_key_pair
+  key_name               = aws_key_pair.tfdemo.id
   depends_on             = [aws_eip.bastion]
 
   tags = {
     Name = "Private-EC2"
   }
-  connection {                    # to run docker commands inside private ec2 
+  connection { # to run docker commands inside private ec2 
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("~/Downloads/aya.pem")
+    private_key = file("~/.ssh/tfdemo") # change your private key path
     host        = self.private_ip
 
     bastion_host        = aws_eip.bastion.public_ip
-    bastion_host_key    = var.aws_key_pair
+    bastion_host_key    = aws_key_pair.tfdemo.id
     bastion_port        = 22
     bastion_user        = "ubuntu"
-    bastion_private_key = file("~/Downloads/aya.pem")
+    bastion_private_key = file("~/.ssh/tfdemo") # change your private key path
   }
 
   provisioner "remote-exec" {
@@ -124,7 +131,7 @@ resource "aws_instance" "private" {
       "sudo apt install docker.io -y",
       "git clone https://github.com/thaunghtike-share/nodejs.git",
       "cd nodejs && sudo docker build -t nodejsdemo:1.0.0 .",
-      "sudo docker run -d -p 2019:2019 nodejsdemo:1.0.0"   ]
+    "sudo docker run -d -p 2019:2019 nodejsdemo:1.0.0"]
   }
 }
 
@@ -154,7 +161,7 @@ resource "aws_lb_target_group" "demotg" {
 
 # ----------- alb listener on port 80 ------------
 
-resource "aws_lb_listener" "demolistener" {        
+resource "aws_lb_listener" "demolistener" {
   load_balancer_arn = aws_lb.demo.arn
   port              = var.listener_port
   protocol          = var.listener_protocol
@@ -185,7 +192,7 @@ resource "aws_lb_listener_rule" "rule1" {
       message_body = "Forbidden"
       status_code  = "403"
     }
-  }  
+  }
   condition {
     path_pattern {
       values = ["/admin"]
@@ -198,9 +205,9 @@ resource "aws_lb_listener_rule" "rule2" {
   priority     = 90
 
   action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = aws_lb_target_group.demotg.arn
-  }  
+  }
   condition {
     path_pattern {
       values = ["/admin"]
