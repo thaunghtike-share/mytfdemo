@@ -221,15 +221,9 @@ resource "aws_lb_listener_rule" "rule2" {
 }
 ```
 
-these two variables: mypublicip is used to allow ssh to bastion host in bastionSG and adminip var is used to allow access to /admin path.
+adminip var is used to allow access to /admin path.
 
 ```bash
-variable "mypublicip" {    # to allow ssh to bastion host from my public ip
-  type        = string
-  description = "my public ip "
-  default     = "69.160.29.0/24"
-}
-
 variable "adminip" {   # public ip to allow access to /admin url 
   type = string
   default = "116.206.137.18/32"
