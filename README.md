@@ -71,7 +71,7 @@ resource "aws_security_group_rule" "privatesg-albrule" {
   security_group_id        = aws_security_group.awsdemo-sg["privateSG"].id
 }
 ```
-This is to create bastion host. I used existing key pair named aya here.
+This is to create bastion host. 
 ```bash
 resource "aws_instance" "bastion" {
   ami                         = var.ami
@@ -79,7 +79,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = ["${aws_security_group.awsdemo-sg["bastionSG"].id}"]
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
-  key_name                    = var.aws_key_pair
+  key_name                    = aws_key_pair.tfdemo.id
 
   tags = {
     Name = "Bastion-EC2"
@@ -89,30 +89,28 @@ resource "aws_instance" "bastion" {
 After creating bastion host, I created private ec2 instance. I will also use terraform to install docker and run docker container inside this instance via bastion host.
 
 ```bash
-# ----- provision private ec2 -------------
-
 resource "aws_instance" "private" {
   ami                    = var.ami
   instance_type          = var.instance_type
   vpc_security_group_ids = ["${aws_security_group.awsdemo-sg["privateSG"].id}"]
   subnet_id              = module.vpc.private_subnets[0]
-  key_name               = var.aws_key_pair
+  key_name               = aws_key_pair.tfdemo.id
   depends_on             = [aws_eip.bastion]
 
   tags = {
     Name = "Private-EC2"
   }
-  connection {                    # to run docker commands inside private ec2 
+  connection { # to run docker commands inside private ec2 
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("~/Downloads/aya.pem")
+    private_key = file("~/.ssh/tfdemo") # change your private key path
     host        = self.private_ip
 
     bastion_host        = aws_eip.bastion.public_ip
-    bastion_host_key    = var.aws_key_pair
+    bastion_host_key    = aws_key_pair.tfdemo.id
     bastion_port        = 22
     bastion_user        = "ubuntu"
-    bastion_private_key = file("~/Downloads/aya.pem")
+    bastion_private_key = file("~/.ssh/tfdemo") # change your private key path
   }
 
   provisioner "remote-exec" {
@@ -121,7 +119,7 @@ resource "aws_instance" "private" {
       "sudo apt install docker.io -y",
       "git clone https://github.com/thaunghtike-share/nodejs.git",
       "cd nodejs && sudo docker build -t nodejsdemo:1.0.0 .",
-      "sudo docker run -d -p 2019:2019 nodejsdemo:1.0.0"   ]
+    "sudo docker run -d -p 2019:2019 nodejsdemo:1.0.0"]
   }
 }
 ```
