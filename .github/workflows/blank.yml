@@ -1,8 +1,21 @@
+name: Generate terraform docs
+on: [push]
 
+jobs:
+  docs:
+    runs-on: ubuntu-latest
     steps:
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@master
+    - uses: actions/checkout@v2
       with:
-        aws-region: us-east-1
-        role-to-assume: arn:aws:iam::993450297386:role/github-deployer
-    - run: aws sts get-caller-identity
+        ref: main
+
+    - name: Render terraform docs inside the README.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: .
+        config-file: .terraform-docs.yml
+        output-file: test.md
+        output-method: inject
+        indention: 3
+        git-push: true
+        git-commit-message: "terraform-docs: automated action"
