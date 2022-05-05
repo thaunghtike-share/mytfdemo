@@ -9,6 +9,7 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/tags/*' }}
     steps:
     - name: Set output
       id: vars
