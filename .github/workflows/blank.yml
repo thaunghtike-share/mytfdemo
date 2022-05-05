@@ -16,6 +16,8 @@ jobs:
         ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
         ECR_REPOSITORY: agora/agora
         IMAGE_TAG: ${{ github.ref }}
+        DOCKER_IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       run: |
         which aws
-        echo $IMAGE_TAG
+        which kubectl
+        echo $DOCKER_IMAGE
