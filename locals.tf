@@ -33,7 +33,7 @@ locals {
       description = "security group for alb"
       ingress = {
         http = {
-          from        = 80
+          from        = 800
           to          = 80
           protocol    = "tcp"
           cidr_blocks = [var.all_ip]
