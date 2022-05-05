@@ -8,7 +8,12 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+          
 workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+     filters:
+       branches:
+         only:
+           - demo
