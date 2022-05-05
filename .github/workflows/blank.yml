@@ -9,7 +9,7 @@ jobs:
       with:
         ref: main
         
-    - run: echo ${GITHUB_REF##*/}
+    - run: echo ${GITHUB_REF#refs/*/}
 
     - name: Render terraform docs inside the README.md and push changes back to PR branch
       uses: terraform-docs/gh-actions@v1.0.0
