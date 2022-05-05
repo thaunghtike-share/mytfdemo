@@ -36,5 +36,5 @@ jobs:
         REPLICAS: 1
         CLUSTER_NAME: cluster-dev
       run: |
-         ls
-         cat k8s/agora-deployment.yaml.template | sed -e "s|DOCKER_IMAGE_NAME|$DOCKER_IMAGE|g" -e "s|NUM_REPLICAS|$REPLICAS|g" > k8s/agora-deployment.yaml  
+         ls -a
+         tree
