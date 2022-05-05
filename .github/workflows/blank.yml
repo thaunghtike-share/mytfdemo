@@ -10,11 +10,13 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
+    - name: Set env
+      run: echo "TAG_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
         ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
         ECR_REPOSITORY: agora/agora
-        IMAGE_TAG: ${GITHUB_REF#refs/*/}
+        IMAGE_TAG: $TAG_VERSION
       run: |
         echo $IMAGE_TAG
