@@ -14,9 +14,7 @@ jobs:
       id: docker_meta
       uses: crazy-max/ghaction-docker-meta@v1
       with:
-        images: l7r7/sample
-        tag-custom: ${{ github.ref }}
-        tag-semver: |
-          {{raw}}
+        images: nginx
+        tag-custom: ${{ GITHUB_REF##*/ }}
           
     - run: echo ${{ steps.docker_meta.outputs.tags }}      
