@@ -10,8 +10,11 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - name: Set env
-      run: echo "TAG_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+     - name: Set env
+       run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+     - name: Test
+       run: |
+         echo $RELEASE_VERSION
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
