@@ -10,19 +10,13 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Docker meta
+      id: docker_meta
+      uses: crazy-max/ghaction-docker-meta@v1
       with:
-        ref: main
-        
-    - run: echo ${GITHUB_REF#refs/*/}
-
-    - name: Render terraform docs inside the README.md and push changes back to PR branch
-      uses: terraform-docs/gh-actions@v1.0.0
-      with:
-        working-dir: .
-        config-file: .terraform-docs.yml
-        output-file: test.md
-        output-method: inject
-        indention: 3
-        git-push: true
-        git-commit-message: "terraform-docs: automated action"
+        images: l7r7/sample
+        tag-custom: ${{ github.ref }}
+        tag-semver: |
+          {{raw}}
+          
+    - run: echo ${{ steps.docker_meta.outputs.tags }}      
