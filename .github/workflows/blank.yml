@@ -27,16 +27,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:  
-    -  name: Create deployment manifest
-       env: 
-          ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
-          ECR_REPOSITORY: agora/agora
-          IMAGE_TAG: ${{ github.sha }} 
-          DOCKER_IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          REPLICAS: 1
-          CLUSTER_NAME: cluster-dev
-       run: |
-          cat k8s/agora-deployment.yaml.template |\
-            sed -e "s|DOCKER_IMAGE_NAME|$DOCKER_IMAGE|g" \
-            -e "s|NUM_REPLICAS|$REPLICAS|g" \
-            > k8s/agora-deployment.yaml   
+    - name: Create deployment manifest
+      env: 
+        ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
+        ECR_REPOSITORY: agora/agora
+        IMAGE_TAG: ${{ github.sha }} 
+        DOCKER_IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        REPLICAS: 1
+        CLUSTER_NAME: cluster-dev
+      run: |
+         cat k8s/agora-deployment.yaml.template |\
+           sed -e "s|DOCKER_IMAGE_NAME|$DOCKER_IMAGE|g" \
+           -e "s|NUM_REPLICAS|$REPLICAS|g" \
+           > k8s/agora-deployment.yaml  
