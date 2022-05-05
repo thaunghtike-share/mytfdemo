@@ -23,6 +23,6 @@ jobs:
       env:
         ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
         ECR_REPOSITORY: agora/agora
-        IMAGE_TAG: $TAG_VERSION
+        IMAGE_TAG: ${{ steps.vars.outputs.tag }}
       run: |
         echo $IMAGE_TAG
