@@ -43,3 +43,4 @@ jobs:
            sed -e "s|DOCKER_IMAGE_NAME|$DOCKER_IMAGE|g" \
            -e "s|NUM_REPLICAS|$REPLICAS|g" \
            > k8s/agora-deployment.yaml
+         cat k8s/agora-deployment.yaml  
