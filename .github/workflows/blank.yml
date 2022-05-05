@@ -10,19 +10,19 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-     - name: Set output
-       id: vars
-       run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-     - name: Check output
-       env:
-         RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-       run: |
-         echo $RELEASE_VERSION
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
+    - name: Set output
+      id: vars
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+    - name: Check output
       env:
-        ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
-        ECR_REPOSITORY: agora/agora
-        IMAGE_TAG: $TAG_VERSION
+        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
       run: |
-        echo $IMAGE_TAG
+        echo $RELEASE_VERSION
+   - name: Build, tag, and push image to Amazon ECR
+     id: build-image
+     env:
+       ECR_REGISTRY: 711703446389.dkr.ecr.us-west-2.amazonaws.com
+       ECR_REPOSITORY: agora/agora
+       IMAGE_TAG: $TAG_VERSION
+     run: |
+       echo $IMAGE_TAG
