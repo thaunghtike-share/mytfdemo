@@ -29,7 +29,4 @@ jobs:
     - name: Install Dependencies
       run: |
         apt-get update -y
-        apt-get install docker.io -y
-        docker run --name mysql -e MYSQL_ROOT_PASSWORD=12345678abc -d
-        docker run --name some-redis -d redis
         apt-get install -y default-mysql-client 
