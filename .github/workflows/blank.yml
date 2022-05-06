@@ -1,1 +1,23 @@
+name: CI Branches
 
+on:
+  push:
+    branches:
+      - main
+      - release
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: elixir:1.11
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release' }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Install Dependencies
+      run: |
+        apt-get update -y
+        apt-get install docker.io -y
+        docker run --name mysql -e MYSQL_ROOT_PASSWORD=12345678abc -d
+        docker run --name some-redis -d redis
+        apt-get install -y default-mysql-client 
