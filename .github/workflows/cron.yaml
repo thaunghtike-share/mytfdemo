@@ -1,8 +1,8 @@
 name: Weekly Team Sync
 on:
-  schedule:
-    - cron: "*/5 * * * *"
-
+  push:
+    branches:
+      - main  
 jobs:
   create_issue:
     name: Create team sync issue
