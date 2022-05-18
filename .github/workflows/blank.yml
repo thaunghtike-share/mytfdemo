@@ -1,32 +1,30 @@
-name: CI Branches
-
+name: Weekly Team Sync
 on:
-  push:
-    branches:
-      - main
-      - release
+  schedule:
+    - cron: "* * * * *"
 
 jobs:
-  test:
+  create_issue:
+    name: Create team sync issue
     runs-on: ubuntu-latest
-    container: elixir:1.11
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release' }}
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: rootpassword
-        ports:
-          - 33306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      redis:
-        image: redis
-        ports:
-        - 6379:6379 
+    permissions:
+      issues: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Install Dependencies
-      run: |
-        apt-get update -y
-        apt-get install -y default-mysql-client 
+      - name: Create team sync issue
+        uses: imjohnbo/issue-bot@3daae12aa54d38685d7ff8459fc8a2aee8cea98b
+        with:
+          labels: "weekly sync, docs-team"
+          title: "Team sync"
+          body: |
+            ### Version
+
+            - [ ] Karpenter (https://github.com/opszero/terraform-aws-kubespot/blob/main/variables.tf#L426)
+
+            ### Discussion Points
+            Add things to discuss below
+
+            - [Work this week](https://github.com/orgs/github/projects/3)
+          pinned: false
+          close-previous: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
