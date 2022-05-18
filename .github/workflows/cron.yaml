@@ -31,7 +31,6 @@ jobs:
               default = "v0.9.1"
             }
             
-            - [Work this week]
           pinned: false
           close-previous: false
         env:
