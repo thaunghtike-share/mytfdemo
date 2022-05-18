@@ -16,14 +16,22 @@ jobs:
           labels: "weekly sync, docs-team"
           title: "Team sync"
           body: |
-            ### Version
+            ### Update current Helm Charts Version to the latest
 
             - [ ] Karpenter (https://github.com/opszero/terraform-aws-kubespot/blob/main/variables.tf#L426)
+            - [ ] Metric Server (https://github.com/opszero/terraform-aws-kubespot/blob/main/variables.tf#L384)
 
-            ### Discussion Points
-            Add things to discuss below
+            ### Change the value of variables in variables.tf
+            
+            variable "metrics_server_version" {
+              default = "3.8.2"  
+            }   
 
-            - [Work this week](https://github.com/orgs/github/projects/3)
+            variable "karpenter_version" {
+              default = "v0.9.1"
+            }
+            
+            - [Work this week]
           pinned: false
           close-previous: false
         env:
