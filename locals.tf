@@ -1,5 +1,3 @@
-# --- root/locals.tf ---
-
 # ----- security groups local variable ------
 
 locals {
